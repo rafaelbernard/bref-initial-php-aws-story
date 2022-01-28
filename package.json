@@ -1,0 +1,22 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafaelbernard/bref-initial-php-aws-story.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rafaelbernard/bref-initial-php-aws-story/issues"
+  },
+  "homepage": "https://github.com/rafaelbernard/bref-initial-php-aws-story#readme",
+  "devDependencies": {
+    "serverless": "^3.0.1"
+  }
+}
