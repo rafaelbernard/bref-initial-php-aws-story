@@ -1,0 +1,52 @@
+service: bref-initial-php-aws-story
+
+provider:
+  httpApi:
+    cors: true
+  name: aws
+  region: us-east-1
+  runtime: provided.al2
+  stage: dev
+  environment:
+    APP_ENV: prod
+
+plugins:
+  - ./vendor/bref/bref
+  - serverless-plugin-log-retention
+functions:
+  app:
+    handler: serverless/index.php
+    layers:
+      - ${bref:layer.php-80-fpm}
+    events:
+      - httpApi: '*'
+    package:
+      patterns:
+        - 'config/**'
+        - 'serverless/**'
+        - 'src/**'
+  # This function let us run console commands in Lambda
+  console:
+    handler: bin/console
+    timeout: 120 # in seconds
+    layers:
+      - ${bref:layer.php-80} # PHP
+      - ${bref:layer.console} # The "console" layer
+
+package:
+  individually: true
+  patterns:
+    # to remove
+    - '!.serverless/'
+    - '!bin/'
+    - '!node_modules/'
+#    - '!var/'
+    # to add
+    - var/cache/prod/*
+    - src/*
+    - serverless/*
+
+custom:
+  bref:
+    separateVendor: true
+  logRetentionInDays: 5 # used to set a global value for all functions

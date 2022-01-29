@@ -11,6 +11,7 @@
         "php": ">=8.0.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "monolog/monolog": "^2.3",
         "symfony/console": "6.0.*",
         "symfony/dotenv": "6.0.*",
         "symfony/flex": "^2",
@@ -19,6 +20,8 @@
         "symfony/yaml": "6.0.*"
     },
     "require-dev": {
+        "bref/bref": "^1.5",
+        "bref/symfony-bridge": "0.2.0-beta1"
     },
     "config": {
         "allow-plugins": {

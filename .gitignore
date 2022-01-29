@@ -13,3 +13,7 @@
 
 # JS
 node_modules
+
+###> bref/symfony-bridge ###
+/.serverless/
+###< bref/symfony-bridge ###
