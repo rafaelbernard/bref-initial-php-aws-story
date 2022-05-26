@@ -1,4 +1,4 @@
-service: bref-initial-php-aws-story
+service: bref-initial-php-aws-story-sls
 
 provider:
   httpApi:
@@ -11,13 +11,13 @@ provider:
     APP_ENV: prod
 
 plugins:
-  - ./vendor/bref/bref
+  - ./php/vendor/bref/bref
   - serverless-plugin-log-retention
 functions:
   app:
-    handler: serverless/index.php
+    handler: php/serverless/index.php
     layers:
-      - ${bref:layer.php-80-fpm}
+      - ${bref:layer.php-81-fpm}
     events:
       - httpApi: '*'
     package:
@@ -27,24 +27,24 @@ functions:
         - 'src/**'
   # This function let us run console commands in Lambda
   console:
-    handler: bin/console
+    handler: php/bin/console
     timeout: 120 # in seconds
     layers:
-      - ${bref:layer.php-80} # PHP
+      - ${bref:layer.php-81} # PHP
       - ${bref:layer.console} # The "console" layer
 
 package:
   individually: true
-  patterns:
-    # to remove
-    - '!.serverless/'
-    - '!bin/'
-    - '!node_modules/'
-#    - '!var/'
-    # to add
-    - var/cache/prod/*
-    - src/*
-    - serverless/*
+#  patterns:
+#    # to remove
+#    - '!.serverless/'
+#    - '!bin/'
+#    - '!node_modules/'
+##    - '!var/'
+#    # to add
+#    - var/cache/prod/*
+#    - src/*
+#    - serverless/*
 
 custom:
   bref:

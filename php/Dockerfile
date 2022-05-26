@@ -13,8 +13,6 @@ RUN apt-get update \
         unzip wget \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app/php
-
 # Composer
 RUN wget https://getcomposer.org/installer \
     && php ./installer && rm installer \

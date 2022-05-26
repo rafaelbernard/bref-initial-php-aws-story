@@ -1,0 +1,27 @@
+# IDE
+.idea
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+# JS
+node_modules
+
+###> bref/symfony-bridge ###
+/.serverless/
+###< bref/symfony-bridge ###
+
+*.js
+!jest.config.js
+*.d.ts
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
