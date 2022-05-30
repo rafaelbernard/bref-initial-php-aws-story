@@ -22,17 +22,17 @@
     "cdk": "cdk"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.10",
-    "@types/node": "10.17.27",
+    "@types/jest": "^27",
+    "@types/node": "^17.0.36",
     "aws-cdk": "^2.12.0",
     "aws-cdk-lib": "^2.18.0",
     "cdk-serverless-lamp": "^1.4.54",
-    "jest": "^26.4.2",
+    "jest": "^28.1.0",
     "serverless": "^3.15.2",
     "serverless-plugin-log-retention": "^2.0.0",
-    "ts-jest": "^26.2.0",
-    "ts-node": "^9.0.0",
-    "typescript": "~3.9.7"
+    "ts-jest": "^28",
+    "ts-node": "^10",
+    "typescript": "^4"
   },
   "dependencies": {
     "@aws-cdk/aws-lambda": "^1.156.1",
