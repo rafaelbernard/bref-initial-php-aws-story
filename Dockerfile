@@ -27,17 +27,18 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash \
 # Install and enable symfony on HTTPS
 RUN symfony server:ca:install
 
-WORKDIR /app
+WORKDIR /app/php
 
-COPY composer.json composer.lock symfony.lock ./
+COPY php/composer.json php/composer.lock symfony.lock ./
 RUN composer install --no-scripts
 
-RUN npm install -g serverless cdk
+WORKDIR /app
+
+RUN npm install -g cdk
 
 # Copy source
 COPY . .
-RUN composer install \
-    && serverless plugin install -n serverless-plugin-log-retention
+RUN cd php && composer install
 
 WORKDIR /tmp
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
@@ -45,7 +46,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && ./aws/install \
     && rm awscliv2.zip
 
-WORKDIR /app
+WORKDIR /app/php
 
 # Exposing
 EXPOSE 8000

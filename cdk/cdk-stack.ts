@@ -28,19 +28,24 @@ export class CdkStack extends Stack {
     //   layers: [phpRuntimeLayer],
     // });
 
-    const myFunction = new CdkFunction(this, 'php-lambda', {
-    //const myFunction = new lambda.Function(this, 'php-lambda', {
-        runtime: Runtime.PROVIDED, // for custom runtime
-        code: Code.fromAsset('../php'),
-        handler: 'serverless/index.php',
-        layers: [phpRuntimeLayer],
-    });
+    // const myFunction = new CdkFunction(this, 'php-lambda', {
+    // //const myFunction = new lambda.Function(this, 'php-lambda', {
+    //     runtime: Runtime.PROVIDED, // for custom runtime
+    //     code: Code.fromAsset('../php'),
+    //     handler: 'serverless/index.php',
+    //     layers: [phpRuntimeLayer],
+    // });
+    //
+    // const laravelBut = new ServerlessLaravel(this, 'serverless-laravel', {
+    //   brefLayerVersion: 'arn:aws:lambda:us-east-1:209497400698:layer:php-81-fpm:19',
+    //   laravelPath: path.join(__dirname, '../php'),
+    //   handler: myFunction
+    // })
 
-    const laravelBut = new ServerlessLaravel(this, 'serverless-laravel', {
+    const laravelOnly = new ServerlessLaravel(this, 'serverless-laravel', {
       brefLayerVersion: 'arn:aws:lambda:us-east-1:209497400698:layer:php-81-fpm:19',
       laravelPath: path.join(__dirname, '../php'),
-      handler: myFunction
-    })
+    });
 
     new CfnOutput(this, 'sqs', {
       value: queue.queueName
