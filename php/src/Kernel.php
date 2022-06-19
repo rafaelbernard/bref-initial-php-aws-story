@@ -10,4 +10,14 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 class Kernel extends BrefKernel
 {
     use MicroKernelTrait;
+
+    public function getCacheDir(): string
+    {
+            return '/tmp/cache/' . $this->environment;
+    }
+
+    public function getLogDir(): string
+    {
+            return '/tmp/log/';
+    }
 }
