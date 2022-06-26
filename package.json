@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npm run clean && npm run lint && echo Using TypeScript && tsc --version && tsc --pretty --project tsconfig-publish.json && cp -r package.json README.md cdk/resources lib/",
     "clean": "rimraf cdk.out lib",
-    "deploy": "npm run clean && NAMESPACE=$(whoami | tr '.' '-') cdk deploy",
+    "deploy": "npm run clean && npm run pac && NAMESPACE=$(whoami | tr '.' '-') cdk deploy",
     "destroy:dev": "npm run clean && NAMESPACE=dev cdk destroy \"*\"",
     "destroy": "npm run clean && NAMESPACE=$(whoami | tr '.' '-') cdk destroy \"*\"",
     "diff": "npm run clean && NAMESPACE=$(whoami | tr '.' '-') cdk diff",
@@ -19,7 +19,9 @@
     "build-orig": "tsc",
     "watch": "tsc -w",
     "test-orig": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "pac": "rimraf assets && mkdir -p assets/get && cp php/handlers/get.php assets/get && cp -r php/vendor assets/get && cd -",
+    "pacx": "rimraf assets && mkdir -p assets/ && cd assets && zip get.zip -r ../php/handlers/get.php ../php/vendor && cd -"
   },
   "devDependencies": {
     "@types/jest": "^27",
@@ -35,7 +37,6 @@
     "typescript": "^4"
   },
   "dependencies": {
-    "@aws-cdk/aws-lambda": "^1.156.1",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.16"
   }
