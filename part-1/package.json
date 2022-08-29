@@ -2,24 +2,24 @@
   "name": "cdk",
   "version": "0.1.0",
   "bin": {
-    "cdk": "bin/cdk.js"
+    "cdk": "part-1/bin/cdk.js"
   },
   "scripts": {
-    "build": "npm run clean && npm run lint && echo Using TypeScript && tsc --version && tsc --pretty --project tsconfig-publish.json && cp -r package.json README.md cdk/resources lib/",
+    "build": "npm run clean && npm run lint && echo Using TypeScript && tsc --version && tsc --pretty --project tsconfig-publish.json && cp -r package.json README.md part-1/cdk/resources lib/",
     "clean": "rimraf cdk.out lib",
     "deploy": "npm run clean && npm run pac && NAMESPACE=$(whoami | tr '.' '-') cdk deploy",
-    "destroy:dev": "npm run clean && NAMESPACE=dev cdk destroy \"*\"",
-    "destroy": "npm run clean && NAMESPACE=$(whoami | tr '.' '-') cdk destroy \"*\"",
-    "diff": "npm run clean && NAMESPACE=$(whoami | tr '.' '-') cdk diff",
+    "destroy:dev": "npm run clean && NAMESPACE=dev part-1/cdk destroy \\\"*\\\"",
+    "destroy": "npm run clean && NAMESPACE=$(whoami | tr '.' '-') part-1/cdk destroy \\\"*\\\"",
+    "diff": "npm run clean && NAMESPACE=$(whoami | tr '.' '-') part-1/cdk diff",
     "info": "npm info @naviance/devstack@$npm_package_version",
     "lint": "eslint . --ext=.js,.ts",
     "pretest": "npm run lint",
-    "synth": "npm run clean && NAMESPACE=$(whoami | tr '.' '-') cdk synth",
+    "synth": "npm run clean && NAMESPACE=$(whoami | tr '.' '-') part-1/cdk synth",
     "test": "jest --coverage --runInBand --silent",
     "build-orig": "tsc",
     "watch": "tsc -w",
     "test-orig": "jest",
-    "cdk": "cdk",
+    "cdk": "part-1/cdk",
     "pac": "rimraf assets && mkdir -p assets/get && cp php/handlers/get.php assets/get && cp -r php/vendor assets/get && cd -",
     "pacx": "rimraf assets && mkdir -p assets/ && cd assets && zip get.zip -r ../php/handlers/get.php ../php/vendor && cd -"
   },
