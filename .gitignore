@@ -1,0 +1,21 @@
+# IDE
+.idea
+
+# PHP
+composer.phar
+coverage/
+var/
+vendor/
+response.json
+
+# JS
+node_modules
+
+*.js
+!jest.config.js
+*.d.ts
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+assets
