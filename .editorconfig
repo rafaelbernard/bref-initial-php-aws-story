@@ -1,0 +1,8 @@
+[*]
+indent_size = 4
+
+[dev]
+indent_size = 8
+
+[*.ts]
+indent_size = 2
