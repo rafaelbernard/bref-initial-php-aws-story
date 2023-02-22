@@ -2,6 +2,7 @@ import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Code, Function as LambdaFunction, FunctionUrlAuthType, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { join } from 'path';
+import { PhpFunction } from '@bref.sh/constructs';
 
 export class CdkStack extends Stack {
 
@@ -21,11 +22,23 @@ export class CdkStack extends Stack {
       functionName: 'part1-get',
     });
 
+    const brefLambda = new PhpFunction(this, 'get-bref', {
+      handler: '../assets/get/get.php',
+      // code: Code.fromAsset(join(__dirname, `../assets/get`)),
+      // functionName: 'part1-get-bref',
+      // phpVersion: "8.2"
+    });
+
     const fnUrl = getLambda.addFunctionUrl({authType: FunctionUrlAuthType.NONE});
+    const fnUrlBref = brefLambda.addFunctionUrl({authType: FunctionUrlAuthType.NONE});
 
     new CfnOutput(this, 'TheUrl', {
       // The .url attributes will return the unique Function URL
       value: fnUrl.url,
+    });
+    new CfnOutput(this, 'TheUrlBref', {
+      // The .url attributes will return the unique Function URL
+      value: fnUrlBref.url,
     });
   }
 }
