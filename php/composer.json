@@ -10,8 +10,14 @@
     "require": {
         "php": ">=8.1",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "bref/bref": "^1.7",
         "symfony/http-foundation": "6.2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "BrefStory\\": "src/"
+        }
     },
     "config": {
         "allow-plugins": {

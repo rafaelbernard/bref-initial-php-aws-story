@@ -29,5 +29,7 @@ return function ($request) {
 
     $response = new \Symfony\Component\HttpFoundation\JsonResponse($responseBody);
 
+    $image = (new \BrefStory\Application\SampleService())->getImageFor();
+
     return (new \Bref\Event\Http\HttpResponse($response->getContent(), $response->headers->all()))->toApiGatewayFormatV2();
 };

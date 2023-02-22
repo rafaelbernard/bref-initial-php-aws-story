@@ -19,8 +19,4 @@ new CdkStack(app, 'CdkStack', {
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
   stackName: 'bref-initial-php-aws-history-cdk',
-
-  env: {
-    region: 'us-east-1',
-  },
 });
