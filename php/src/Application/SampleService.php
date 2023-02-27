@@ -2,20 +2,39 @@
 
 namespace BrefStory\Application;
 
+use AsyncAws\S3\S3Client;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Symfony\Component\HttpClient\HttpClient;
+
 class SampleService
 {
-    public function getImageFor(): string
+    public function getImageFor(int $imagePixels): string
     {
-        $ch = \curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://picsum.photos/200');
-        \curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+        $logger = new \Monolog\Logger('name');
+        $logger->pushHandler(new StreamHandler('php://stdout', Logger::INFO));
 
-        $output = \curl_exec($ch);
-        curl_close($ch);
+        $logger->info(__METHOD__);
 
-        die($output);
+        $client = HttpClient::create();
+        $response = $client->request('GET', $url = "https://picsum.photos/{$imagePixels}");
+        $output = $response->getContent();
+
+        $logger->info('Info', [
+            'bucketName' => getenv('BUCKET_NAME'),
+            'image' => $image ?? null,
+            'url' => $url ?? null,
+            'response' => $response ? $response->getHeaders() : null,
+        ]);
+
+        $client = new S3Client();
+        $client->putObject([
+            'Bucket' => getenv('BUCKET_NAME'),
+            'Key' => 'file-' . uniqid('file-', true) . '.jpg',
+            'Body' => $output,
+        ]);
+
+        //die($output);
+        return 'yes';
     }
 }

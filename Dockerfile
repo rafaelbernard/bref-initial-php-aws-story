@@ -16,8 +16,11 @@ RUN apk add --no-cache \
     && php ./installer && rm installer \
     && mv composer.phar /usr/local/bin/composer
 
-
 WORKDIR /app
+
+COPY package.json package-lock.json ./
+
+RUN npm install
 
 COPY ./run-docker.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/run-docker.sh

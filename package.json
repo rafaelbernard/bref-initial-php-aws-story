@@ -18,7 +18,7 @@
     "watch": "tsc -w",
     "test-orig": "jest",
     "cdk": "part-1/cdk",
-    "pac": "rimraf assets && mkdir -p assets/get && cp php/handlers/get.php assets/get && cp -r php/vendor assets/get && cd -"
+    "pac": "rimraf assets && mkdir -p assets/get && cp php/handlers/get.php assets/get && cp -r php/vendor assets/get && cp -r php/src assets/get && cd -"
   },
   "devDependencies": {
     "@types/jest": "^27",
