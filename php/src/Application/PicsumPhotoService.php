@@ -5,6 +5,10 @@ namespace BrefStory\Application;
 use AsyncAws\S3\S3Client;
 use BrefStory\Domain\ImageService;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class PicsumPhotoService implements ImageService
@@ -17,6 +21,12 @@ class PicsumPhotoService implements ImageService
     ) {
     }
 
+    /**
+     * @throws ClientExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws TransportExceptionInterface
+     */
     public function getImageFor(int $imagePixels): array
     {
         $response = $this->httpClient->request('GET', $url = "https://picsum.photos/{$imagePixels}");
@@ -26,8 +36,8 @@ class PicsumPhotoService implements ImageService
             'bucketName' => getenv('BUCKET_NAME'),
             'image' => $image ?? null,
             'url' => $url ?? null,
-            'response' => $response ? $response->getHeaders() : null,
-            'info' => $response ? $response->getInfo() : null,
+            'response' => $response->getHeaders(),
+            'info' => $response->getInfo(),
         ]);
 
         $this->s3Client->putObject([
