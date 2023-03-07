@@ -26,7 +26,7 @@ export class CdkStack extends Stack {
       handler: 'get.php',
       runtime: Runtime.PROVIDED_AL2,
       code: Code.fromAsset(join(__dirname, `../assets/get`)),
-      functionName: 'part1-get',
+      functionName: 'fibonacci-image',
       environment: {
         BUCKET_NAME: brefBucket.bucketName,
       }

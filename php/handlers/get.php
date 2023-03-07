@@ -18,20 +18,19 @@ function fibonacci(int $n): float
 }
 
 return function ($request) {
-    $int = (int) ($request['queryStringParameters']['int'] ?? random_int(1, 300));
+    $int = (int) ($request['queryStringParameters']['int'] ?? random_int(400, 1200));
+
+    $metadata = \BrefStory\Application\ServiceFactory::createPicsumPhotoService()->getImageFor($int);
 
     $responseBody = [
         'response' => 'OK. Time: ' . time(),
         'now' => date('Y-m-d H:i:s'),
         'int' => $int,
-        'result' => fibonacci($int),
+        'fibonacci' => fibonacci($int),
+        'metadata' => $metadata,
     ];
 
     $response = new \Symfony\Component\HttpFoundation\JsonResponse($responseBody);
-
-    error_log('Log!');
-
-    $image = (new \BrefStory\Application\SampleService())->getImageFor($int);
 
     return (new \Bref\Event\Http\HttpResponse($response->getContent(), $response->headers->all()))->toApiGatewayFormatV2();
 };
