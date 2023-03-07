@@ -18,7 +18,7 @@ function fibonacci(int $n): float
 }
 
 return function ($request) {
-    $int = (int) ($request['queryStringParameters']['int'] ?? random_int(400, 1200));
+    $int = (int) ($request['queryStringParameters']['int'] ?? random_int(400, 1000));
 
     $metadata = \BrefStory\Application\ServiceFactory::createPicsumPhotoService()->getImageFor($int);
 
