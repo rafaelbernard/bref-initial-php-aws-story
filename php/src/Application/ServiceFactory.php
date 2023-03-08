@@ -17,7 +17,7 @@ class ServiceFactory
         return new PicsumPhotoService(
             HttpClient::create(),
             new S3Client(),
-            $logger,
+            getenv('BUCKET_NAME'),
         );
     }
 }

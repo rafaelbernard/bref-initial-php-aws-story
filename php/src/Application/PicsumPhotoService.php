@@ -2,9 +2,9 @@
 
 namespace BrefStory\Application;
 
+use AsyncAws\S3\Exception\NoSuchKeyException;
 use AsyncAws\S3\S3Client;
 use BrefStory\Domain\ImageService;
-use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -17,7 +17,7 @@ class PicsumPhotoService implements ImageService
     public function __construct(
         private readonly HttpClientInterface $httpClient,
         private readonly S3Client $s3Client,
-        private readonly LoggerInterface $logger,
+        private readonly string $bucketName,
     ) {
     }
 
@@ -29,19 +29,31 @@ class PicsumPhotoService implements ImageService
      */
     public function getImageFor(int $imagePixels): array
     {
+        try {
+            return $this->getImageFromBucket($imagePixels);
+        } catch (NoSuchKeyException) {
+            // do nothing
+        }
+
+        return $this->saveImageToBucket($imagePixels);
+    }
+
+    /**
+     * @param int $imagePixels
+     *
+     * @return array
+     * @throws ClientExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    private function saveImageToBucket(int $imagePixels): array
+    {
         $response = $this->httpClient->request('GET', $url = "https://picsum.photos/{$imagePixels}");
         $output = $response->getContent();
 
-        $this->logger->info('Info', [
-            'bucketName' => getenv('BUCKET_NAME'),
-            'image' => $image ?? null,
-            'url' => $url ?? null,
-            'response' => $response->getHeaders(),
-            'info' => $response->getInfo(),
-        ]);
-
         $this->s3Client->putObject([
-            'Bucket' => getenv('BUCKET_NAME'),
+            'Bucket' => $this->bucketName,
             'Key' => $imageLocation = "images/$imagePixels.jpg",
             'Body' => $output,
         ]);
@@ -56,11 +68,21 @@ class PicsumPhotoService implements ImageService
         ];
 
         $this->s3Client->putObject([
-            'Bucket' => getenv('BUCKET_NAME'),
+            'Bucket' => $this->bucketName,
             'Key' => "metadata/$imagePixels.json",
             'Body' => json_encode($metadata),
         ]);
 
         return $metadata;
+    }
+
+    private function getImageFromBucket(int $imagePixels): ?array
+    {
+        $objectOutput = $this->s3Client->getObject([
+            'Bucket' => $this->bucketName,
+            'Key' => "metadata/$imagePixels.json",
+        ]);
+
+        return json_decode($objectOutput->getBody(), associative: true);
     }
 }

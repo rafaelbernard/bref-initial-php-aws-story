@@ -12,6 +12,19 @@ test('Lambda created', () => {
   const template = Template.fromStack(stack);
 
   template.hasResourceProperties('AWS::Lambda::Function', {
-    Layers: [Cdk.CdkStack.brefLayerFunctionArn]
+    Layers: [Cdk.CdkStack.brefLayerFunctionArn],
+    FunctionName: 'fibonacci-image',
+  });
+});
+
+test('Bucket created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new Cdk.CdkStack(app, 'MyTestStack');
+  // THEN
+  const template = Template.fromStack(stack);
+
+  template.hasResourceProperties('AWS::S3::Bucket', {
+    Tags: [{Key: 'aws-cdk:auto-delete-objects', Value: 'true'}],
   });
 });
