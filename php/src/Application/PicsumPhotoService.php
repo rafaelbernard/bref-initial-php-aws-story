@@ -4,16 +4,14 @@ namespace BrefStory\Application;
 
 use AsyncAws\S3\Exception\NoSuchKeyException;
 use AsyncAws\S3\S3Client;
-use BrefStory\Domain\ImageService;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class PicsumPhotoService implements ImageService
+class PicsumPhotoService
 {
-
     public function __construct(
         private readonly HttpClientInterface $httpClient,
         private readonly S3Client $s3Client,

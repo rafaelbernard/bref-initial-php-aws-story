@@ -20,7 +20,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY ./run-docker.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/run-docker.sh
