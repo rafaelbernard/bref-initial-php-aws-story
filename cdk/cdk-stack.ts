@@ -7,7 +7,7 @@ import { Bucket } from 'aws-cdk-lib/aws-s3';
 export class CdkStack extends Stack {
 
   // Get Bref layer ARN from https://runtimes.bref.sh/
-  public static brefLayerFunctionArn = 'arn:aws:lambda:us-east-1:209497400698:layer:php-82:18';
+  public static brefLayerFunctionArn = 'arn:aws:lambda:us-east-1:209497400698:layer:php-82:19';
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
