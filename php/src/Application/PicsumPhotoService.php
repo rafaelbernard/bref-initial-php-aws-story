@@ -20,12 +20,6 @@ class PicsumPhotoService
     ) {
     }
 
-    /**
-     * @throws ClientExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws TransportExceptionInterface
-     */
     public function getJpegImageFor(int $imagePixels): array
     {
         try {
@@ -65,15 +59,6 @@ class PicsumPhotoService
         return $this->createAndPutMetadata($url, $response, $imagePixels);
     }
 
-    /**
-     * @param int $imagePixels
-     *
-     * @return array
-     * @throws ClientExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
-     */
     private function fetchImage(int $imagePixels): array
     {
         $response = $this->httpClient->request('GET', $url = "https://picsum.photos/{$imagePixels}");
@@ -81,13 +66,7 @@ class PicsumPhotoService
         return [$url, $response, $fetchedImage];
     }
 
-    /**
-     * @param int $imagePixels
-     * @param mixed $fetchedImage
-     *
-     * @return void
-     */
-    public function saveImage(int $imagePixels, mixed $fetchedImage): void
+    private function saveImage(int $imagePixels, mixed $fetchedImage): void
     {
         $this->s3Client->putObject([
             'Bucket' => $this->bucketName,
@@ -106,14 +85,7 @@ class PicsumPhotoService
         return "metadata/$imagePixels.json";
     }
 
-    /**
-     * @param mixed $url
-     * @param mixed $response
-     * @param int $imagePixels
-     *
-     * @return array
-     */
-    public function createAndPutMetadata(mixed $url, ResponseInterface $response, int $imagePixels): array
+    private function createAndPutMetadata(mixed $url, ResponseInterface $response, int $imagePixels): array
     {
         $metadata = [
             'originalUrl' => $url,
@@ -129,6 +101,7 @@ class PicsumPhotoService
             'Key' => $this->metadataKeyFor($imagePixels),
             'Body' => json_encode($metadata),
         ]);
+
         return $metadata;
     }
 }

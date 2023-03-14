@@ -3,10 +3,11 @@
 
 # PHP
 composer.phar
+response.json
+.phpunit.result.cache
 coverage/
 var/
 vendor/
-response.json
 
 # JS
 node_modules
