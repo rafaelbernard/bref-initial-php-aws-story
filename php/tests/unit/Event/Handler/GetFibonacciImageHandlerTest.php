@@ -20,10 +20,6 @@ class GetFibonacciImageHandlerTest extends TestCase
 
         $this->picsumPhotoServiceMock = $this->createMock(PicsumPhotoService::class);
 
-//        $this->handler = new GetFibonacciImageHandler(
-//            $this->picsumPhotoServiceMock,
-//        );
-
         $this->handler = $this
             ->getMockBuilder(GetFibonacciImageHandler::class)
             ->setConstructorArgs([$this->picsumPhotoServiceMock])
@@ -33,7 +29,9 @@ class GetFibonacciImageHandlerTest extends TestCase
 
     public function testCanHandle()
     {
-        $request = ['queryStringParameters' => ['int' => $int = 400]];
+        $int = 400;
+        $fibonacciFromInt = 1.760236806450138e+83;
+        $request = ['queryStringParameters' => ['int' => $int]];
         $context = new Context('fake-aws-id', 123456, 'fake-invoked-arn', 'fake-traceid');
         $now = new \DateTimeImmutable();
         $metadata = ['metadata-key' => 'metadata-value'];
@@ -53,7 +51,7 @@ class GetFibonacciImageHandlerTest extends TestCase
                 'context' => $context,
                 'now' => $now->format('Y-m-d H:i:s'),
                 'int' => $int,
-                'fibonacci' => $this->fibonacci($int),
+                'fibonacci' => $fibonacciFromInt,
                 'metadata' => $metadata,
             ]
         );
@@ -64,23 +62,5 @@ class GetFibonacciImageHandlerTest extends TestCase
         );
 
         self::assertEquals($expected, $response);
-    }
-
-    private function fibonacci(int $n): float
-    {
-        if ($n <= 1) {
-            return $n;
-        }
-
-        $n2 = 0;
-        $n1 = 1;
-
-        for ($i = 2; $i < $n; $i++) {
-            $n2_ = $n2;
-            $n2 = $n1;
-            $n1 = ($n1 + $n2_);
-        }
-
-        return $n2 + $n1;
     }
 }
