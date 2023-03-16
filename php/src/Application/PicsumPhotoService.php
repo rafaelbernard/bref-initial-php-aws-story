@@ -75,16 +75,6 @@ class PicsumPhotoService
         ]);
     }
 
-    private function imageKeyFor(int $imagePixels): string
-    {
-        return "image/$imagePixels.jpg";
-    }
-
-    private function metadataKeyFor(int $imagePixels): string
-    {
-        return "metadata/$imagePixels.json";
-    }
-
     private function createAndPutMetadata(mixed $url, ResponseInterface $response, int $imagePixels): array
     {
         $metadata = [
@@ -103,5 +93,15 @@ class PicsumPhotoService
         ]);
 
         return $metadata;
+    }
+
+    private function imageKeyFor(int $imagePixels): string
+    {
+        return "image/$imagePixels.jpg";
+    }
+
+    private function metadataKeyFor(int $imagePixels): string
+    {
+        return "metadata/$imagePixels.json";
     }
 }

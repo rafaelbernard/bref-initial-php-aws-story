@@ -21,20 +21,22 @@ export class CdkStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const getLambda = new LambdaFunction(this, `${stackPrefix}GetFunction`, {
+    const functionName = 'GetFibonacciImage';
+
+    const getLambda = new LambdaFunction(this, `${stackPrefix}${functionName}`, {
       layers: [layer],
       handler: 'get.php',
       runtime: Runtime.PROVIDED_AL2,
       code: Code.fromAsset(join(__dirname, `../assets/get`)),
-      functionName: 'fibonacci-image',
+      functionName,
       environment: {
         BUCKET_NAME: brefBucket.bucketName,
-      }
+      },
     });
 
     brefBucket.grantReadWrite(getLambda);
 
-    const fnUrl = getLambda.addFunctionUrl({authType: FunctionUrlAuthType.NONE});
+    const fnUrl = getLambda.addFunctionUrl({ authType: FunctionUrlAuthType.NONE });
 
     new CfnOutput(this, 'TheUrl', {
       // The .url attributes will return the unique Function URL

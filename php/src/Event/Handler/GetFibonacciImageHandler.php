@@ -1,26 +1,30 @@
 <?php
 
-namespace BrefStory\Handler;
+namespace BrefStory\Event\Handler;
 
+use Bref\Context\Context;
+use Bref\Event\Handler;
 use Bref\Event\Http\HttpResponse;
 use BrefStory\Application\PicsumPhotoService;
 use BrefStory\Application\ServiceFactory;
-use Monolog\Logger;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class GetFibonacciImageHandler
+class GetFibonacciImageHandler implements Handler
+//class GetFibonacciImageHandler
 {
     public function __construct(private readonly PicsumPhotoService $photoService)
     {
     }
 
-    public function handle($request, \DateTimeImmutable $now = new \DateTimeImmutable()): HttpResponse
+    public function handle($event, Context $context)
     {
-        ServiceFactory::logger()->info('request', [$request]);
+        ServiceFactory::logger()->info('request', [$event]);
 
-        $int = (int) ($request['queryStringParameters']['int'] ?? random_int(400, 1000));
+        $int = (int) ($event['queryStringParameters']['int'] ?? random_int(400, 1000));
 
         $metadata = $this->photoService->getJpegImageFor($int);
+
+        $now = $this->dateTimeImmutable();
 
         $responseBody = [
             'response' => 'OK. Time: ' . $now->getTimestamp(),
@@ -33,6 +37,11 @@ class GetFibonacciImageHandler
         $response = new JsonResponse($responseBody);
 
         return new HttpResponse($response->getContent(), $response->headers->all());
+    }
+
+    protected function dateTimeImmutable(): \DateTimeImmutable
+    {
+        return new \DateTimeImmutable();
     }
 
     private function fibonacci(int $n): float

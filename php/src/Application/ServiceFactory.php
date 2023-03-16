@@ -3,6 +3,7 @@
 namespace BrefStory\Application;
 
 use AsyncAws\S3\S3Client;
+use BrefStory\Event\Handler\GetFibonacciImageHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
@@ -11,6 +12,13 @@ use Symfony\Component\HttpClient\HttpClient;
 
 class ServiceFactory
 {
+    public static function createGetFibonacciImageHandler(): GetFibonacciImageHandler
+    {
+        return new GetFibonacciImageHandler(
+            self::createPicsumPhotoService()
+        );
+    }
+
     public static function createPicsumPhotoService(): PicsumPhotoService
     {
         return new PicsumPhotoService(

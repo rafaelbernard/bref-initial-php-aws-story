@@ -5,6 +5,9 @@ import * as Cdk from '../cdk/cdk-stack';
 // example test. To run these tests, uncomment this file along with the
 // example resource in lib/cdk-stack.ts
 describe('Testing the template', () => {
+  const stackPrefix = 'BrefStory';
+  const functionName = 'GetFibonacciImage';
+
   const app = new cdk.App();
   // WHEN
   const stack = new Cdk.CdkStack(app, 'MyTestStack');
@@ -14,7 +17,7 @@ describe('Testing the template', () => {
   it('test', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Layers: [Cdk.CdkStack.brefLayerFunctionArn],
-      FunctionName: 'fibonacci-image',
+      FunctionName: functionName,
     });
   });
 
@@ -26,7 +29,7 @@ describe('Testing the template', () => {
 
   it('Should have a policy for S3', () => {
     template.hasResourceProperties('AWS::IAM::Policy', {
-      PolicyName: Match.stringLikeRegexp("^BrefStoryGetFunctionServiceRoleDefaultPolicy"),
+      PolicyName: Match.stringLikeRegexp(`^${stackPrefix}${functionName}ServiceRoleDefaultPolicy`),
       PolicyDocument: {
         Statement: [{
           Action: [
