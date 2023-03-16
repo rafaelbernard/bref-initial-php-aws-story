@@ -10,13 +10,12 @@ use BrefStory\Application\ServiceFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GetFibonacciImageHandler implements Handler
-//class GetFibonacciImageHandler
 {
     public function __construct(private readonly PicsumPhotoService $photoService)
     {
     }
 
-    public function handle($event, Context $context)
+    public function handle($event, Context $context): HttpResponse
     {
         ServiceFactory::logger()->info('request', [$event]);
 
@@ -24,11 +23,9 @@ class GetFibonacciImageHandler implements Handler
 
         $metadata = $this->photoService->getJpegImageFor($int);
 
-        $now = $this->dateTimeImmutable();
-
         $responseBody = [
-            'response' => 'OK. Time: ' . $now->getTimestamp(),
-            'now' => $now->format('Y-m-d H:i:s'),
+            'context' => $context,
+            'now' => $this->dateTimeImmutable()->format('Y-m-d H:i:s'),
             'int' => $int,
             'fibonacci' => $this->fibonacci($int),
             'metadata' => $metadata,

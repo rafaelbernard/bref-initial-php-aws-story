@@ -40,7 +40,12 @@
         "symfony/polyfill-php80": "*"
     },
     "scripts": {
-        "unit": "./vendor/bin/phpunit -c tests/unit/phpunit.xml"
+        "prepare-unit-cmd": "@composer install",
+        "unit-cmd": "./vendor/bin/phpunit -c tests/unit/phpunit.xml",
+        "unit": [
+            "@prepare-unit-cmd",
+            "@unit-cmd"
+        ]
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0"
