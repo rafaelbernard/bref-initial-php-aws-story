@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class GetFibonacciImageHandler implements Handler
 {
     private const MIN_PIXELS_FOR_REASONABLE_IMAGE_AND_NOT_BIG_FIBONACCI = 400;
-    private const MAX_PIXELS_FOR_REASONABLE_IMAGE_AND_NOT_BIG_FIBONACCI = 400;
+    private const MAX_PIXELS_FOR_REASONABLE_IMAGE_AND_NOT_BIG_FIBONACCI = 1000;
 
     public function __construct(private readonly PicsumPhotoService $photoService)
     {
