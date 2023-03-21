@@ -14,7 +14,7 @@ describe('Testing the template', () => {
   // THEN
   const template = Template.fromStack(stack);
 
-  it('test', () => {
+  it('Should have a lambda function to get fibonacci', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Layers: [Cdk.CdkStack.brefLayerFunctionArn],
       FunctionName: functionName,
