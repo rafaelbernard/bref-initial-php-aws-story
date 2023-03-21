@@ -6,7 +6,6 @@ use Bref\Context\Context;
 use Bref\Event\Handler;
 use Bref\Event\Http\HttpResponse;
 use BrefStory\Application\PicsumPhotoService;
-use BrefStory\Application\ServiceFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GetFibonacciImageHandler implements Handler
@@ -20,8 +19,6 @@ class GetFibonacciImageHandler implements Handler
 
     public function handle($event, Context $context): HttpResponse
     {
-        ServiceFactory::logger()->info('request', [$event]);
-
         $int = (int) (
             $event['queryStringParameters']['int'] ?? random_int(
                 self::MIN_PIXELS_FOR_REASONABLE_IMAGE_AND_NOT_BIG_FIBONACCI,
