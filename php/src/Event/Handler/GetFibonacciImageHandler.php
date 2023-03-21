@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GetFibonacciImageHandler implements Handler
 {
+    private const MIN_PIXELS_FOR_REASONABLE_IMAGE_AND_NOT_BIG_FIBONACCI = 400;
+    private const MAX_PIXELS_FOR_REASONABLE_IMAGE_AND_NOT_BIG_FIBONACCI = 400;
+
     public function __construct(private readonly PicsumPhotoService $photoService)
     {
     }
@@ -19,7 +22,12 @@ class GetFibonacciImageHandler implements Handler
     {
         ServiceFactory::logger()->info('request', [$event]);
 
-        $int = (int) ($event['queryStringParameters']['int'] ?? random_int(400, 1000));
+        $int = (int) (
+            $event['queryStringParameters']['int'] ?? random_int(
+                self::MIN_PIXELS_FOR_REASONABLE_IMAGE_AND_NOT_BIG_FIBONACCI,
+                self::MAX_PIXELS_FOR_REASONABLE_IMAGE_AND_NOT_BIG_FIBONACCI
+            )
+        );
 
         $metadata = $this->photoService->getJpegImageFor($int);
 
