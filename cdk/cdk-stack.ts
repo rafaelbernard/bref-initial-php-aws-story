@@ -43,9 +43,6 @@ export class CdkStack extends Stack {
       value: fnUrl.url,
     });
 
-    new CfnOutput(this, 'Bucket', {
-      // The .url attributes will return the unique Function URL
-      value: brefBucket.bucketName,
-    });
+    new CfnOutput(this, 'Bucket', { value: brefBucket.bucketName });
   }
 }
