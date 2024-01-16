@@ -3,6 +3,7 @@ import { Construct } from 'constructs';
 import { Code, Function as LambdaFunction, FunctionUrlAuthType, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { join } from 'path';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
+import { packagePhpCode, PhpFunction } from "@bref.sh/constructs";
 
 export class CdkStack extends Stack {
 
@@ -35,6 +36,23 @@ export class CdkStack extends Stack {
       },
       memorySize: 1024,
     });
+
+    // const getLambda = new PhpFunction(this, `${stackPrefix}${functionName}`, {
+    //   // layers: [layer],
+    //   handler: 'get.php',
+    //   runtime: Runtime.PROVIDED_AL2,
+    //   // code: Code.fromAsset(join(__dirname, `../assets/get`)),
+    //
+    //   code: packagePhpCode(join(__dirname, `../assets/get`), {
+    //     exclude: ['docs'],
+    //   }),
+    //
+    //   functionName,
+    //   environment: {
+    //     BUCKET_NAME: brefBucket.bucketName,
+    //   },
+    //   memorySize: 1024,
+    // });
 
     brefBucket.grantReadWrite(getLambda);
 
