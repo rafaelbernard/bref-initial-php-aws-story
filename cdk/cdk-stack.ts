@@ -8,8 +8,8 @@ import { packagePhpCode, PhpFunction } from "@bref.sh/constructs";
 export class CdkStack extends Stack {
 
   // Get Bref layer ARN from https://runtimes.bref.sh/
-  // public static brefLayerFunctionArn = 'arn:aws:lambda:us-east-1:209497400698:layer:php-82:19';
-  public static brefLayerFunctionArn = 'arn:aws:lambda:us-east-1:209497400698:layer:php-82:30';
+  // public static brefLayerFunctionArn = 'arn:aws:lambda:us-east-1:209497400698:layer:php-82:30';
+  public static brefLayerFunctionArn = 'arn:aws:lambda:us-east-1:534081306603:layer:php-82:57';
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
