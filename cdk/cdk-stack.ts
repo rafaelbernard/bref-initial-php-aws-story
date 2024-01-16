@@ -33,7 +33,7 @@ export class CdkStack extends Stack {
       environment: {
         BUCKET_NAME: brefBucket.bucketName,
       },
-      memorySize: 512,
+      memorySize: 1024,
     });
 
     brefBucket.grantReadWrite(getLambda);
