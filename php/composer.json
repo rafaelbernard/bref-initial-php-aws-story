@@ -11,7 +11,7 @@
         "php": ">=8.1",
         "ext-ctype": "*",
         "async-aws/s3": "^1.13",
-        "bref/bref": "^1.7",
+        "bref/bref": "^2",
         "monolog/monolog": "^3.3",
         "symfony/http-foundation": "^6.2"
     },
