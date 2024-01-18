@@ -1,6 +1,6 @@
 import { CfnOutput, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { FunctionUrlAuthType, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { FunctionUrlAuthType, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { join } from 'path';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { packagePhpCode, PhpFunction } from "@bref.sh/constructs";
