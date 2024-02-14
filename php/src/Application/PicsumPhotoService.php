@@ -2,6 +2,9 @@
 
 namespace BrefStory\Application;
 
+use AsyncAws\DynamoDb\DynamoDbClient;
+use AsyncAws\DynamoDb\Input\PutItemInput;
+use AsyncAws\DynamoDb\ValueObject\AttributeValue;
 use AsyncAws\S3\Exception\NoSuchKeyException;
 use AsyncAws\S3\S3Client;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -17,16 +20,18 @@ class PicsumPhotoService
         private readonly HttpClientInterface $httpClient,
         private readonly S3Client $s3Client,
         private readonly string $bucketName,
+        private readonly DynamoDbClient $dynamoDbClient,
+        private readonly string $tableName,
     ) {
     }
 
     public function getJpegImageFor(int $imagePixels): array
     {
-        try {
-            return $this->getImageFromBucket($imagePixels);
-        } catch (NoSuchKeyException) {
-            // do nothing
-        }
+//        try {
+//            return $this->getImageFromBucket($imagePixels);
+//        } catch (NoSuchKeyException) {
+//            // do nothing
+//        }
 
         return $this->fetchAndSaveImageToBucket($imagePixels);
     }
@@ -91,6 +96,15 @@ class PicsumPhotoService
             'Key' => $this->metadataKeyFor($imagePixels),
             'Body' => json_encode($metadata),
         ]);
+
+        $this->dynamoDbClient->putItem(new PutItemInput([
+            'TableName' => $this->tableName,
+            'Item' => [
+                'PK' => new AttributeValue(['S', 'IMAGE']),
+                'SK' => new AttributeValue(['S', "PIXELS#{$imagePixels}"]),
+//                ...$metadata
+            ],
+        ]));
 
         return $metadata;
     }

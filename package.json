@@ -9,7 +9,7 @@
     "clean": "rimraf cdk.out lib",
     "deploy": "npm run clean && npm run pac && cdk deploy",
     "destroy": "npm run clean && cdk destroy '*'",
-    "diff": "npm run clean && part-1/cdk diff",
+    "diff": "npm run clean && cdk diff",
     "lint": "eslint . --ext=.js,.ts",
     "pretest": "npm run lint",
     "synth": "npm run clean && part-1/cdk synth",

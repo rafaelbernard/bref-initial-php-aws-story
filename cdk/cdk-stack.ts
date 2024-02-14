@@ -4,6 +4,7 @@ import { FunctionUrlAuthType, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { join } from 'path';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { packagePhpCode, PhpFunction } from "@bref.sh/constructs";
+import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
 
 export class CdkStack extends Stack {
 
@@ -12,13 +13,27 @@ export class CdkStack extends Stack {
 
     const stackPrefix = 'BrefStory';
 
+    const TableName = `${stackPrefix}-table`;
+
+    const table = new Table(this, TableName, {
+      partitionKey: { name: 'PK', type: AttributeType.STRING },
+      sortKey: { name: 'SK', type: AttributeType.STRING },
+      removalPolicy: RemovalPolicy.DESTROY,
+      tableName: TableName,
+    });
+
     const brefBucket = new Bucket(this, `${stackPrefix}Bucket`, {
       autoDeleteObjects: true,
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const functionName = 'GetFibonacciImage';
+    const lambdaEnvironment = {
+      TableName,
+      TableArn: table.tableArn,
+      BucketName: brefBucket.bucketName,
+    };
 
+    const functionName = 'GetFibonacciImage';
     const getLambda = new PhpFunction(this, `${stackPrefix}${functionName}`, {
       handler: 'get.php',
       phpVersion: '8.3',
@@ -27,14 +42,14 @@ export class CdkStack extends Stack {
         exclude: ['test', 'tests'],
       }),
       functionName,
-      environment: {
-        BUCKET_NAME: brefBucket.bucketName,
-      },
+      environment: lambdaEnvironment,
     });
+
+    const fnUrl = getLambda.addFunctionUrl({ authType: FunctionUrlAuthType.NONE });
 
     brefBucket.grantReadWrite(getLambda);
 
-    const fnUrl = getLambda.addFunctionUrl({ authType: FunctionUrlAuthType.NONE });
+    table.grantReadWriteData(getLambda);
 
     new CfnOutput(this, 'TheUrl', {
       // The .url attributes will return the unique Function URL
