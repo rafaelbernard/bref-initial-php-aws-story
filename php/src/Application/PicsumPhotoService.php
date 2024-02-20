@@ -5,7 +5,6 @@ namespace BrefStory\Application;
 use AsyncAws\DynamoDb\DynamoDbClient;
 use AsyncAws\DynamoDb\Input\PutItemInput;
 use AsyncAws\DynamoDb\ValueObject\AttributeValue;
-use AsyncAws\S3\Exception\NoSuchKeyException;
 use AsyncAws\S3\S3Client;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -22,7 +21,8 @@ class PicsumPhotoService
         private readonly string $bucketName,
         private readonly DynamoDbClient $dynamoDbClient,
         private readonly string $tableName,
-    ) {
+    )
+    {
     }
 
     public function getJpegImageFor(int $imagePixels): array
@@ -97,14 +97,19 @@ class PicsumPhotoService
             'Body' => json_encode($metadata),
         ]);
 
-        $this->dynamoDbClient->putItem(new PutItemInput([
+        $result = $this->dynamoDbClient->putItem(new PutItemInput([
             'TableName' => $this->tableName,
             'Item' => [
-                'PK' => new AttributeValue(['S', 'IMAGE']),
-                'SK' => new AttributeValue(['S', "PIXELS#{$imagePixels}"]),
+                'PK' => new AttributeValue(['S' => 'IMAGE']),
+                'SK' => new AttributeValue(['S' => "PIXELS#{$imagePixels}"]),
 //                ...$metadata
             ],
         ]));
+//
+//        ServiceFactory::logger()->info(
+//            'Consumed capacity: ' . ($result->getConsumedCapacity() ? $result->getConsumedCapacity()->getCapacityUnits() : null),
+//            ['tableName' => $this->tableName] + compact('result'),
+//        );
 
         return $metadata;
     }
