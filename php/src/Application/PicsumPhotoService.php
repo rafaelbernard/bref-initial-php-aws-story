@@ -102,16 +102,22 @@ class PicsumPhotoService
             'Item' => [
                 'PK' => new AttributeValue(['S' => 'IMAGE']),
                 'SK' => new AttributeValue(['S' => "PIXELS#{$imagePixels}"]),
-//                ...$metadata
+                ...self::toDynamoDbItem($metadata),
             ],
         ]));
-//
-//        ServiceFactory::logger()->info(
-//            'Consumed capacity: ' . ($result->getConsumedCapacity() ? $result->getConsumedCapacity()->getCapacityUnits() : null),
-//            ['tableName' => $this->tableName] + compact('result'),
-//        );
 
         return $metadata;
+    }
+
+    private static function toDynamoDbItem(array $data): array
+    {
+        $dynamoData = [];
+        foreach ($data as $key => $value) {
+            $dynamoData[$key] = new AttributeValue(['S' => is_array($value) ? json_encode($value) : $value]);
+            ServiceFactory::logger()->info('KV', compact('key', 'value'));
+        }
+        ServiceFactory::logger()->info('Meta', compact('dynamoData'));
+        return $dynamoData;
     }
 
     private function imageKeyFor(int $imagePixels): string
