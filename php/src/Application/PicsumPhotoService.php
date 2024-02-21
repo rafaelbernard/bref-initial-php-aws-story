@@ -55,9 +55,7 @@ readonly class PicsumPhotoService
     private function fetchAndSaveImageToBucket(int $imagePixels): array
     {
         list($url, $response, $fetchedImage) = $this->fetchImage($imagePixels);
-
-        $this->saveImage($imagePixels, $fetchedImage);
-
+        $this->s3Service->saveImage($imagePixels, $fetchedImage);
         return $this->createAndPutMetadata($url, $response, $imagePixels);
     }
 
@@ -66,11 +64,6 @@ readonly class PicsumPhotoService
         $response = $this->httpClient->request('GET', $url = "https://picsum.photos/{$imagePixels}");
         $fetchedImage = $response->getContent();
         return [$url, $response, $fetchedImage];
-    }
-
-    private function saveImage(int $imagePixels, mixed $fetchedImage): void
-    {
-        $this->s3Service->saveImage($imagePixels, $fetchedImage);
     }
 
     private function createAndPutMetadata(mixed $url, ResponseInterface $response, int $imagePixels): array
