@@ -24,10 +24,14 @@ class ServiceFactory
     {
         return new PicsumPhotoService(
             HttpClient::create(),
-            new S3Client(),
-            getenv('BucketName'),
-            new DynamoDbClient(),
-            getenv('TableName'),
+            new S3Service(
+                new S3Client(),
+                getenv('BucketName'),
+            ),
+            new DynamoDbRepository(
+                new DynamoDbClient(),
+                getenv('TableName'),
+            ),
         );
     }
 
