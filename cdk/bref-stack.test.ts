@@ -1,5 +1,5 @@
-import { Template } from 'aws-cdk-lib/assertions';
-import { expect as expectCDK, haveResource, ResourcePart, SynthUtils } from '@aws-cdk/assert';
+import { Match, Template } from 'aws-cdk-lib/assertions';
+import { countResources, expect as expectCDK, haveResource, ResourcePart, SynthUtils } from '@aws-cdk/assert';
 import { BrefStack } from "./bref-stack";
 import { App } from "aws-cdk-lib";
 
@@ -9,6 +9,7 @@ process.env.CDK_DEFAULT_REGION = 'us-east-1';
 // example test. To run these tests, uncomment this file along with the
 // example resource in lib/cdk-stack.ts
 describe('Testing the template', () => {
+  const stackPrefix = 'BrefStory';
   const functionName = 'GetFibonacciImage';
 
   const app = new App();
@@ -52,41 +53,59 @@ describe('Testing the template', () => {
     expect(template.toJSON()).toMatchSnapshot(matchObject);
   });
 
-  it('Should have a lambda function to get fibonacci', () => {
+  test('Should have a lambda function to get fibonacci', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       FunctionName: functionName,
     });
   });
 
-  it('Should have an S3 Bucket', () => {
+  test('Should have an S3 Bucket', () => {
     template.hasResourceProperties('AWS::S3::Bucket', {
       Tags: [{ Key: 'aws-cdk:auto-delete-objects', Value: 'true' }],
     });
   });
 
-  // it('Should have a policy for S3', () => {
-  //   template.hasResourceProperties('AWS::IAM::Policy', {
-  //     PolicyName: Match.stringLikeRegexp(`^${stackPrefix}${functionName}ServiceRoleDefaultPolicy`),
-  //     PolicyDocument: {
-  //       Statement: [{
-  //         Action: [
-  //           "s3:GetObject*",
-  //           "s3:GetBucket*",
-  //           "s3:List*",
-  //           "s3:DeleteObject*",
-  //           "s3:PutObject",
-  //           "s3:PutObjectLegalHold",
-  //           "s3:PutObjectRetention",
-  //           "s3:PutObjectTagging",
-  //           "s3:PutObjectVersionTagging",
-  //           "s3:Abort*",
-  //         ],
-  //       }],
-  //     },
-  //   });
-  // });
+  test('Policy has correct permissions', () => {
+    template.hasResourceProperties('AWS::IAM::Policy', {
+      PolicyName: Match.stringLikeRegexp(`^${stackPrefix}${functionName}ServiceRoleDefaultPolicy`),
+      PolicyDocument: {
+        Statement: [
+          {
+            Action: [
+              "s3:GetObject*",
+              "s3:GetBucket*",
+              "s3:List*",
+              "s3:DeleteObject*",
+              "s3:PutObject",
+              "s3:PutObjectLegalHold",
+              "s3:PutObjectRetention",
+              "s3:PutObjectTagging",
+              "s3:PutObjectVersionTagging",
+              "s3:Abort*",
+            ],
+          },
+          {
+            Action: [
+              "dynamodb:BatchGetItem",
+              "dynamodb:GetRecords",
+              "dynamodb:GetShardIterator",
+              "dynamodb:Query",
+              "dynamodb:GetItem",
+              "dynamodb:Scan",
+              "dynamodb:ConditionCheckItem",
+              "dynamodb:BatchWriteItem",
+              "dynamodb:PutItem",
+              "dynamodb:UpdateItem",
+              "dynamodb:DeleteItem",
+              "dynamodb:DescribeTable",
+            ],
+          }
+        ],
+      },
+    });
+  });
 
-  it('Should have DynamoDB', () => {
+  test('Should have DynamoDB', () => {
     expectCDK(stack).to(
       haveResource(
         'AWS::DynamoDB::Table',
@@ -125,5 +144,9 @@ describe('Testing the template', () => {
         ResourcePart.CompleteDefinition,
       )
     );
+  });
+
+  test('Lambda Functions', () => {
+    expectCDK(stack).to(countResources('AWS::Lambda::Function', 2));
   });
 });
