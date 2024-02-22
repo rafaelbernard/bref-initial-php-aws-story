@@ -1,0 +1,396 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing the template Entire stack 1`] = `
+{
+  "Outputs": {
+    "Bucket": {
+      "Value": {
+        "Ref": "BrefStoryBucket11F6B363",
+      },
+    },
+    "TheUrl": {
+      "Value": {
+        "Fn::GetAtt": [
+          "BrefStoryGetFibonacciImageFunctionUrl6FA922F8",
+          "FunctionUrl",
+        ],
+      },
+    },
+  },
+  "Parameters": Any<Object>,
+  "Resources": {
+    "BrefStoryBucket11F6B363": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true",
+          },
+        ],
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "BrefStoryBucketAutoDeleteObjectsCustomResourceCC495814": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "BrefStoryBucketPolicy4120ADE1",
+      ],
+      "Properties": {
+        "BucketName": {
+          "Ref": "BrefStoryBucket11F6B363",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::S3AutoDeleteObjects",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "BrefStoryBucketPolicy4120ADE1": {
+      "Properties": {
+        "Bucket": {
+          "Ref": "BrefStoryBucket11F6B363",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:PutBucketPolicy",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                    "Arn",
+                  ],
+                },
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "BrefStoryBucket11F6B363",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "BrefStoryBucket11F6B363",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "BrefStoryGetFibonacciImage1064710C": {
+      "DependsOn": [
+        "BrefStoryGetFibonacciImageServiceRoleDefaultPolicy1B72F9A7",
+        "BrefStoryGetFibonacciImageServiceRoleEBD06551",
+      ],
+      "Properties": {
+        "Code": Any<Object>,
+        "Environment": {
+          "Variables": {
+            "BucketName": {
+              "Ref": "BrefStoryBucket11F6B363",
+            },
+            "TableArn": {
+              "Fn::GetAtt": [
+                "BrefStorytableAB041590",
+                "Arn",
+              ],
+            },
+            "TableName": "BrefStory-table",
+          },
+        },
+        "FunctionName": "GetFibonacciImage",
+        "Handler": "get.php",
+        "Layers": [
+          "arn:aws:lambda:us-east-1:534081306603:layer:php-83:17",
+        ],
+        "MemorySize": 1024,
+        "Role": {
+          "Fn::GetAtt": [
+            "BrefStoryGetFibonacciImageServiceRoleEBD06551",
+            "Arn",
+          ],
+        },
+        "Runtime": "provided.al2",
+        "Timeout": 6,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "BrefStoryGetFibonacciImageFunctionUrl6FA922F8": {
+      "Properties": {
+        "AuthType": "NONE",
+        "TargetFunctionArn": {
+          "Fn::GetAtt": [
+            "BrefStoryGetFibonacciImage1064710C",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Url",
+    },
+    "BrefStoryGetFibonacciImageServiceRoleDefaultPolicy1B72F9A7": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "BrefStoryBucket11F6B363",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "BrefStoryBucket11F6B363",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "BrefStorytableAB041590",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "BrefStoryGetFibonacciImageServiceRoleDefaultPolicy1B72F9A7",
+        "Roles": [
+          {
+            "Ref": "BrefStoryGetFibonacciImageServiceRoleEBD06551",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "BrefStoryGetFibonacciImageServiceRoleEBD06551": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "BrefStoryGetFibonacciImageinvokefunctionurl64B2B92F": {
+      "Properties": {
+        "Action": "lambda:InvokeFunctionUrl",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "BrefStoryGetFibonacciImage1064710C",
+            "Arn",
+          ],
+        },
+        "FunctionUrlAuthType": "NONE",
+        "Principal": "*",
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "BrefStorytableAB041590": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "PK",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "SK",
+            "AttributeType": "S",
+          },
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "PK",
+            "KeyType": "HASH",
+          },
+          {
+            "AttributeName": "SK",
+            "KeyType": "RANGE",
+          },
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5,
+        },
+        "TableName": "BrefStory-table",
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+      "DependsOn": [
+        "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      ],
+      "Properties": {
+        "Code": Any<Object>,
+        "Description": {
+          "Fn::Join": [
+            "",
+            [
+              "Lambda function for auto-deleting objects in ",
+              {
+                "Ref": "BrefStoryBucket11F6B363",
+              },
+              " S3 bucket.",
+            ],
+          ],
+        },
+        "Handler": "index.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Sub": "arn:\${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

@@ -4,9 +4,9 @@ import { FunctionUrlAuthType, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { join } from 'path';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { packagePhpCode, PhpFunction } from "@bref.sh/constructs";
-import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
+import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
 
-export class CdkStack extends Stack {
+export class BrefStack extends Stack {
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);

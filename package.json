@@ -21,6 +21,7 @@
     "pac": "rimraf assets && mkdir -p assets/get && cd php/ && composer install --optimize-autoloader --no-dev && cd - && cp php/handlers/get.php assets/get && cp -r php/vendor assets/get && cp -r php/src assets/get && cd -"
   },
   "devDependencies": {
+    "@aws-cdk/assert": "^2.68.0",
     "@types/jest": "^29",
     "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6",
