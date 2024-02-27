@@ -28,7 +28,7 @@ readonly class ImageMetadataItem
     {
         return new static(
             (int) $item['pixels']->getN(),
-            $item['metadata']->getS(),
+            (array) json_decode($item['metadata']->getS()),
         );
     }
 }

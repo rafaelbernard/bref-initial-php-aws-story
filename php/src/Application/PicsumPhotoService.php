@@ -4,6 +4,8 @@ namespace BrefStory\Application;
 
 use AsyncAws\S3\Exception\NoSuchKeyException;
 use BrefStory\Domain\ImageMetadataItem;
+use BrefStory\Domain\ImageRepository;
+use BrefStory\Domain\ImageStorageService;
 use BrefStory\Domain\ItemNotFound;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -16,8 +18,8 @@ readonly class PicsumPhotoService
 {
     public function __construct(
         private HttpClientInterface $httpClient,
-        private S3Service $s3Service,
-        private DynamoDbRepository $repository,
+        private ImageStorageService $storageService,
+        private ImageRepository $repository,
     )
     {
     }
@@ -40,7 +42,7 @@ readonly class PicsumPhotoService
     private function getImage(int $imagePixels): ?array
     {
         $this->repository->findImage($imagePixels);
-        return $this->s3Service->getImageFromBucket($imagePixels);
+        return $this->storageService->getImageFromBucket($imagePixels);
     }
 
     /**
@@ -55,7 +57,7 @@ readonly class PicsumPhotoService
     private function fetchAndSaveImageToBucket(int $imagePixels): array
     {
         list($url, $response, $fetchedImage) = $this->fetchImage($imagePixels);
-        $this->s3Service->saveImage($imagePixels, $fetchedImage);
+        $this->storageService->saveImage($imagePixels, $fetchedImage);
         return $this->createAndPutMetadata($url, $response, $imagePixels);
     }
 
@@ -77,7 +79,7 @@ readonly class PicsumPhotoService
             'created' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
         ];
 
-        $this->s3Service->createAndPutMetadata($imagePixels, $metadata);
+        $this->storageService->createAndPutMetadata($imagePixels, $metadata);
 
         $this->repository->addImageMetadata(new ImageMetadataItem($imagePixels, $metadata));
 

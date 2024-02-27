@@ -8,9 +8,10 @@ use AsyncAws\DynamoDb\Input\PutItemInput;
 use AsyncAws\DynamoDb\Result\PutItemOutput;
 use AsyncAws\DynamoDb\ValueObject\AttributeValue;
 use BrefStory\Domain\ImageMetadataItem;
+use BrefStory\Domain\ImageRepository;
 use BrefStory\Domain\ItemNotFound;
 
-readonly class DynamoDbRepository
+readonly class DynamoDbImageRepository implements ImageRepository
 {
     public function __construct(
         private DynamoDbClient $client,

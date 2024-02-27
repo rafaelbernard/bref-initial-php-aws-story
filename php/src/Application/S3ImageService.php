@@ -3,12 +3,13 @@
 namespace BrefStory\Application;
 
 use AsyncAws\S3\S3Client;
+use BrefStory\Domain\ImageStorageService;
 
-class S3Service
+readonly class S3ImageService implements ImageStorageService
 {
     public function __construct(
-        private readonly S3Client $s3Client,
-        private readonly string $bucketName,
+        private S3Client $s3Client,
+        private string $bucketName,
     )
     {
     }
