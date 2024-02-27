@@ -2,6 +2,7 @@
 
 namespace BrefStory\Application;
 
+use AsyncAws\DynamoDb\DynamoDbClient;
 use AsyncAws\S3\S3Client;
 use BrefStory\Event\Handler\GetFibonacciImageHandler;
 use Monolog\Handler\StreamHandler;
@@ -23,8 +24,14 @@ class ServiceFactory
     {
         return new PicsumPhotoService(
             HttpClient::create(),
-            new S3Client(),
-            getenv('BUCKET_NAME'),
+            new S3ImageService(
+                new S3Client(),
+                getenv('BucketName'),
+            ),
+            new DynamoDbImageRepository(
+                new DynamoDbClient(),
+                getenv('TableName'),
+            ),
         );
     }
 

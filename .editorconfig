@@ -1,5 +1,6 @@
 [*]
 indent_size = 4
+ij_any_align_multiline_parameters = false
 
 [dev]
 indent_size = 8
