@@ -25,7 +25,7 @@
     "@types/node": "^17.0.36",
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "aws-cdk": "2.68.0",
-    "aws-cdk-lib": "2.68.0",
+    "aws-cdk-lib": "2.189.0",
     "bump-cdk": "^0.1.8",
     "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.5.0",
